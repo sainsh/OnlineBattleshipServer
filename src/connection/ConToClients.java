@@ -10,7 +10,8 @@ public class ConToClients implements Runnable {
     private NotifyServer notifier;
 
 
-    public ConToClients() {
+    public ConToClients(NotifyServer notifier) {
+        this.notifier = notifier;
     }
 
     @Override

@@ -2,7 +2,9 @@ package connection;
 
 import Model.Cell;
 
-public class MessageToServer {
+import java.io.Serializable;
+
+public class MessageToServer implements Serializable {
 
     boolean isChatMessage = false;
     boolean isShot = false;

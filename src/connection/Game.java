@@ -1,5 +1,6 @@
 package connection;
 
+import Model.Cell;
 import connection.MessageToServer;
 import Model.Board;
 
@@ -26,40 +27,99 @@ public class Game{
             inP1 = new ObjectInputStream(player1.getInputStream());
             outP2 = new ObjectOutputStream(player2.getOutputStream());
             inP2 = new ObjectInputStream(player2.getInputStream());
+            System.out.println("Object I/O Streams estalished");
+            listenToPlayer1();
+            listenToPlayer2();
+            startGame();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startGame(){
+        MessageToClient messageToClient = new MessageToClient();
+        messageToClient.setYourTurn(true);
+        messageToClient.setMessage("Your Turn");
+        try {
+            System.out.println("Sending message to client");
+            outP1.writeObject(messageToClient);
+            outP1.flush();
+            System.out.println("Message to client sent");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void listenToPlayer1(){
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    MessageToServer messageToServer = new MessageToServer();
-                    try {
-                        messageToServer = (MessageToServer) inP1.readObject();
-                        if(messageToServer.isShot()){
-                            int x = messageToServer.getShot().getCoordinate().getX();
-                            int y = messageToServer.getShot().getCoordinate().getY();
-                            shoot(x, y, 2);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+        Runnable runnable = () -> {
+            while(true){
+                MessageToServer messageToServer = new MessageToServer();
+                try {
+                    messageToServer = (MessageToServer) inP1.readObject();
+                    if(messageToServer.isShot()){
+                        Cell cell = messageToServer.getShot();
+                        int x = cell.getCoordinate().getX();
+                        int y = cell.getCoordinate().getY();
+                        shoot(x, y, 1);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         };
+        new Thread(runnable).start();
     }
 
     public void listenToPlayer2(){
-
+        Runnable runnable = () -> {
+            while(true){
+                MessageToServer messageToServer = new MessageToServer();
+                try {
+                    messageToServer = (MessageToServer) inP2.readObject();
+                    if(messageToServer.isShot()){
+                        Cell cell = messageToServer.getShot();
+                        int x = cell.getCoordinate().getX();
+                        int y = cell.getCoordinate().getY();
+                        shoot(x, y, 1);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     public void shoot(int x, int y, int player){
-        
+        if(player == 1){
+            board.shootBoard2(x, y);
+        }else{
+            board.shootBoard1(x, y);
+        }
+        Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
+        Cell cell = enemyBoard[x][y];
+
+        MessageToClient messageToClient = new MessageToClient();
+        messageToClient.setShot(true);
+        messageToClient.setShot(cell);
+        messageToClient.setYourShot(player == 1);
+        messageToClient.setYourTurn(!(player == 1));
+        try {
+            outP1.writeObject(messageToClient);
+            messageToClient.setYourShot(!(player == 1));
+            messageToClient.setYourTurn(!(player == 1));
+            outP2.writeObject(messageToClient);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
