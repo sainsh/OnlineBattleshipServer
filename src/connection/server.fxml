@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="202.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="connection.ServerController">
+   <children>
+      <TextArea fx:id="serverLog" layoutX="11.0" layoutY="9.0" prefHeight="183.0" prefWidth="427.0" />
+   </children>
+</Pane>
