@@ -26,6 +26,12 @@ public class Board {
         Cell shotCell = board2[x][y];
         shotCell.getCoordinate().setHit(true);
         shotCell.getStatus();
+        for (Coordinate cor: shotCell.getShip().getCoordinates()
+        ) {
+            if (shotCell.getCoordinate() == cor){
+                cor.setHit(true);
+            }
+        }
         return shotCell;
     }
 
