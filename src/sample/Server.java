@@ -23,7 +23,7 @@ public class Server implements Runnable {
         new Thread(() -> {
 
             try {
-                ServerSocket serverSocket = new ServerSocket(1337);
+                ServerSocket serverSocket = new ServerSocket(8000);
 
 
                 while (true) {

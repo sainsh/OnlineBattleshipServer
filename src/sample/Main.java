@@ -14,6 +14,10 @@ public class Main extends Application {
         primaryStage.setTitle("Online Battleship Server");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
+
+        Server server = new Server();
+        Thread thread = new Thread(server);
+        thread.start();
     }
 
 
