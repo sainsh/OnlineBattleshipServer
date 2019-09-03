@@ -57,9 +57,8 @@ public class Game{
     public void listenToPlayer1(){
         Runnable runnable = () -> {
             while(true){
-                MessageToServer messageToServer = new MessageToServer();
                 try {
-                    messageToServer = (MessageToServer) inP1.readObject();
+                    MessageToServer messageToServer = (MessageToServer) inP1.readObject();
                     System.out.println("Message received from player1");
                     if(messageToServer.isShot()){
                         Cell cell = messageToServer.getShot();

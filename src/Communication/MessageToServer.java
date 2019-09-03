@@ -56,4 +56,5 @@ public class MessageToServer implements Serializable {
     public void setSender(String sender) {
         this.sender = sender;
     }
+    
 }
