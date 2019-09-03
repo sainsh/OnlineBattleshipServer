@@ -38,6 +38,7 @@ public class MessageToServer implements Serializable {
 
     public void setChatMessage(String chatMessage) {
         this.chatMessage = chatMessage;
+        isChatMessage = true;
     }
 
     public Cell getShot() {
@@ -55,4 +56,5 @@ public class MessageToServer implements Serializable {
     public void setSender(String sender) {
         this.sender = sender;
     }
+    
 }

@@ -107,7 +107,7 @@ public class Game{
     }
 
     public void shoot(int x, int y, int player){
-        System.out.println("ShootMethod");
+        System.out.println("Shot registered from player" + player + " at " + x + "," + y);
         if(player == 1){
             board.shootBoard2(x, y);
         }else{
@@ -141,7 +141,10 @@ public class Game{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
+
 
     public Socket getPlayer1() {
         return player1;
