@@ -1,4 +1,4 @@
-package connection;
+package Communication;
 
 import Model.Cell;
 
@@ -38,6 +38,7 @@ public class MessageToServer implements Serializable {
 
     public void setChatMessage(String chatMessage) {
         this.chatMessage = chatMessage;
+        isChatMessage = true;
     }
 
     public Cell getShot() {

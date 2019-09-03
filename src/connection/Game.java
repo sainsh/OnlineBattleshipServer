@@ -1,7 +1,8 @@
 package connection;
 
+import Communication.MessageToClient;
 import Model.Cell;
-import connection.MessageToServer;
+import Communication.MessageToServer;
 import Model.Board;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class Game{
     public Game(Socket player1, Socket player2) {
         this.player1 = player1;
         this.player2 = player2;
+        board = new Board();
 
         try {
             outP1 = new ObjectOutputStream(player1.getOutputStream());
@@ -40,7 +42,7 @@ public class Game{
     public void startGame(){
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setYourTurn(true);
-        messageToClient.setMessage("Your Turn");
+        messageToClient.setClientText("Your Turn");
         try {
             System.out.println("Sending message to client");
             outP1.writeObject(messageToClient);
@@ -58,6 +60,7 @@ public class Game{
                 MessageToServer messageToServer = new MessageToServer();
                 try {
                     messageToServer = (MessageToServer) inP1.readObject();
+                    System.out.println("Message received from player1");
                     if(messageToServer.isShot()){
                         Cell cell = messageToServer.getShot();
                         int x = cell.getCoordinate().getX();
@@ -78,6 +81,7 @@ public class Game{
         Runnable runnable = () -> {
             while(true){
                 MessageToServer messageToServer = new MessageToServer();
+                System.out.println("Message received from player2");
                 try {
                     messageToServer = (MessageToServer) inP2.readObject();
                     if(messageToServer.isShot()){
@@ -97,6 +101,7 @@ public class Game{
     }
 
     public void shoot(int x, int y, int player){
+        System.out.println("Shot registered from player" + player + " at " + x + "," + y);
         if(player == 1){
             board.shootBoard2(x, y);
         }else{

@@ -1,4 +1,4 @@
-package connection;
+package Communication;
 
 import Model.Cell;
 
@@ -75,6 +75,7 @@ public class MessageToClient implements Serializable {
 
     public void setClientText(String clientText) {
         this.clientText = clientText;
+        changeClientText = true;
     }
 
     public boolean isChangeClientText() {
