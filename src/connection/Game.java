@@ -71,8 +71,8 @@ public class Game{
                         int y = cell.getCoordinate().getY();
                         shoot(x, y, 1);
                     }
-                    if(messageToServer.isChatMessage()){
-
+                    if (messageToServer.isChatMessage()){
+                        writeMessage("Player1", messageToServer.getChatMessage());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -94,7 +94,10 @@ public class Game{
                         Cell cell = messageToServer.getShot();
                         int x = cell.getCoordinate().getX();
                         int y = cell.getCoordinate().getY();
-                        shoot(x, y, 1);
+                        shoot(x, y, 2);
+                    }
+                    if (messageToServer.isChatMessage()){
+                        writeMessage("Player2", messageToServer.getChatMessage());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -117,12 +120,15 @@ public class Game{
         Cell cell = enemyBoard[x][y];
 
         MessageToClient messageToClient = new MessageToClient();
+        messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
+        messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
         messageToClient.setShot(cell);
         messageToClient.setYourShot(player == 1);
         messageToClient.setYourTurn(!(player == 1));
         try {
             outP1.writeObject(messageToClient);
+            messageToClient.setClientText(player != 1 ? "Opponents turn" : "Your turn");
             messageToClient.setYourShot(!(player == 1));
             messageToClient.setYourTurn(player == 1);
             outP2.writeObject(messageToClient);
