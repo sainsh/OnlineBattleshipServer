@@ -1,5 +1,6 @@
 package Model;
 
+//This class needs to be changed
 public class Ship {
     private Coordinate coordinate = new Coordinate(0,0);
     private Coordinate coordinate2 = new Coordinate(0,1);
