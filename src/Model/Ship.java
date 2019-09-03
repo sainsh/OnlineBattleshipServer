@@ -1,7 +1,9 @@
 package Model;
 
+import java.io.Serializable;
+
 //This class needs to be changed
-public class Ship {
+public class Ship implements Serializable {
     private Coordinate coordinate = new Coordinate(0,0);
     private Coordinate coordinate2 = new Coordinate(0,1);
     private Coordinate[] coordinates = new Coordinate[2];

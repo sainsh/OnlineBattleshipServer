@@ -1,7 +1,8 @@
 package connection;
 
+import Communication.MessageToClient;
 import Model.Cell;
-import connection.MessageToServer;
+import Communication.MessageToServer;
 import Model.Board;
 
 import java.io.IOException;
@@ -38,13 +39,19 @@ public class Game{
     }
 
     public void startGame(){
-        MessageToClient messageToClient = new MessageToClient();
-        messageToClient.setYourTurn(true);
-        messageToClient.setMessage("Your Turn");
+        board = new Board();
+        MessageToClient messageToPlayer1 = new MessageToClient();
+        MessageToClient messageToPlayer2 = new MessageToClient();
+        messageToPlayer1.setYourTurn(true);
+        messageToPlayer1.setClientText("Your Turn");
+        messageToPlayer1.setChangeClientText(true);
+        messageToPlayer2.setClientText("Opponents turn");
+        messageToPlayer2.setChangeClientText(true);
         try {
             System.out.println("Sending message to client");
-            outP1.writeObject(messageToClient);
+            outP1.writeObject(messageToPlayer1);
             outP1.flush();
+            outP2.writeObject(messageToPlayer2);
             System.out.println("Message to client sent");
 
         } catch (IOException e) {
@@ -63,6 +70,9 @@ public class Game{
                         int x = cell.getCoordinate().getX();
                         int y = cell.getCoordinate().getY();
                         shoot(x, y, 1);
+                    }
+                    if(messageToServer.isChatMessage()){
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -97,6 +107,7 @@ public class Game{
     }
 
     public void shoot(int x, int y, int player){
+        System.out.println("ShootMethod");
         if(player == 1){
             board.shootBoard2(x, y);
         }else{
@@ -113,15 +124,24 @@ public class Game{
         try {
             outP1.writeObject(messageToClient);
             messageToClient.setYourShot(!(player == 1));
-            messageToClient.setYourTurn(!(player == 1));
+            messageToClient.setYourTurn(player == 1);
             outP2.writeObject(messageToClient);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void writeMessage(String sender, String message){
+        String string = sender + ": " + message;
+        MessageToClient messageToClient = new MessageToClient();
+        messageToClient.setMessage(string);
+        try {
+            outP1.writeObject(messageToClient);
+            outP2.writeObject(messageToClient);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Socket getPlayer1() {
         return player1;
