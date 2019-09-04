@@ -13,15 +13,16 @@ public class Board {
     public Cell shootBoard1(int x, int y){
         Cell shotCell = board1[x][y];
         shotCell.getCoordinate().setHit(true);
-        shotCell.getStatus();
+
         if(shotCell.getShip() != null) {
             for (Coordinate cor : shotCell.getShip().getCoordinates()
             ) {
-                if (shotCell.getCoordinate() == cor) {
+                if (shotCell.getCoordinate().getX() == cor.getX() && shotCell.getCoordinate().getY() == cor.getY()) {
                     cor.setHit(true);
                 }
             }
         }
+        shotCell.setStatus();
         return shotCell;
     }
 
@@ -29,7 +30,7 @@ public class Board {
         Cell shotCell = board2[x][y];
         shotCell.getCoordinate().setHit(true);
         System.out.println("cellCoordinate = " + shotCell.getCoordinate().getX() + ", " + shotCell.getCoordinate().getY() + " status: " + shotCell.getCoordinate().isHit());
-        shotCell.getStatus();
+        shotCell.setStatus();
         System.out.println(x + ", " + y + " is shot at " + shotCell.getCoordinate().getX() + ", " + shotCell.getCoordinate().getY());
         if (!(shotCell.getShip() == null)) {
             for (Coordinate cor : shotCell.getShip().getCoordinates()
@@ -39,6 +40,7 @@ public class Board {
                 }
             }
         }
+        shotCell.setStatus();
     }
 
     public Cell[][] getBoard1() {
