@@ -149,8 +149,8 @@ public class Board {
         }
     }
 
-    public boolean isGameOver(int player){
-        if(player == 1){
+    public boolean isGameOver(boolean player1){
+        if(!player1){
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     Ship ship = board1[i][j].getShip();

@@ -125,6 +125,7 @@ public class Game{
         Cell cell = enemyBoard[x][y];
         cell.setStatus();
         MessageToClient messageToClient = new MessageToClient();
+        if (cell.getShip() != null){
         if(cell.getShip().isSunken()){
             List<Coordinate> coordinatesList = cell.getShip().getCoordinates();
             int[] coordinates = new int[coordinatesList.size() * 2];
@@ -134,7 +135,7 @@ public class Game{
             }
             messageToClient.setShipSunken(true);
             messageToClient.setCoordinate(coordinates);
-        }
+        }}
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
         messageToClient.setX(cell.getCoordinate().getX());
@@ -142,11 +143,14 @@ public class Game{
         messageToClient.setStatus(cell.getStatus());
         messageToClient.setYourShot(player == 1);
         try{
-            if(board.isGameOver(player)) {
+            if(board.isGameOver(player == 1)) {
+                System.out.println("Game is over");
                 messageToClient.setGameOver(true);
                 messageToClient.setClientText(player == 1 ? "You Won!!!!" : "You Lost!!!!");
                 outP1.writeObject(messageToClient);
+                messageToClient.setYourShot(player != 1);
                 messageToClient.setClientText(player != 1 ? "You Won!!!!" : "You Lost!!!!");
+                outP2.writeObject(messageToClient);
             }else{
                 messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
                 messageToClient.setYourTurn(!(player == 1));
