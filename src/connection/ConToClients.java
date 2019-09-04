@@ -18,6 +18,7 @@ public class ConToClients implements Runnable {
     public void run() {
         try {
             serverSocket = new ServerSocket(port);
+            int sessionID = 1;
 
             while(true){
                 //Establishing connection to player1
@@ -31,8 +32,8 @@ public class ConToClients implements Runnable {
                 notifier.printToServerLog("Player2 connected to server");
 
                 //Starting game with two players
-                Game game = new Game(player1, player2);
-                notifier.printToServerLog("GameStarted");
+                Game game = new Game(player1, player2, notifier, sessionID);
+                sessionID++;
             }
         } catch (IOException e) {
             e.printStackTrace();

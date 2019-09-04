@@ -20,20 +20,25 @@ public class Game {
     private ObjectOutputStream outP2;
     private ObjectInputStream inP2;
     private Board board;
+    private int sessionID;
+    private NotifyServer notifier;
 
-    public Game(Socket player1, Socket player2) {
+    public Game(Socket player1, Socket player2, NotifyServer notifier, int sessionID) {
         this.player1 = player1;
         this.player2 = player2;
+        this.notifier = notifier;
+        this.sessionID = sessionID;
 
         try {
             outP1 = new ObjectOutputStream(player1.getOutputStream());
             inP1 = new ObjectInputStream(player1.getInputStream());
             outP2 = new ObjectOutputStream(player2.getOutputStream());
             inP2 = new ObjectInputStream(player2.getInputStream());
-            System.out.println("Object I/O Streams estalished");
+            printToLog("I/O streams to clients established");
             listenToPlayer1();
             listenToPlayer2();
             startGame();
+            printToLog("Game started");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,12 +59,9 @@ public class Game {
         messageToPlayer2.setBoard(board.getBoard2AsInts());
         messageToPlayer2.setHasBoard(true);
         try {
-            System.out.println("Sending message to client");
             outP1.writeObject(messageToPlayer1);
             outP1.flush();
             outP2.writeObject(messageToPlayer2);
-            System.out.println("Message to client sent");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,7 +77,6 @@ public class Game {
                         int x = messageToServer.getX();
                         int y = messageToServer.getY();
                         shoot(x, y, 1);
-
                     }
                     if (messageToServer.isChatMessage()) {
                         writeMessage("Player1", messageToServer.getChatMessage());
@@ -115,7 +116,6 @@ public class Game {
     }
 
     public void shoot(int x, int y, int player) {
-        System.out.println("Shot registered from player" + player + " at " + x + "," + y);
         if (player == 1) {
             board.shootBoard2(x, y);
         } else {
@@ -124,6 +124,7 @@ public class Game {
         Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
         Cell cell = enemyBoard[x][y];
         cell.setStatus();
+        printToLog("Shot registered from player" + player + " at (" + x + "," + y + ")" + (cell.getStatus() == 2 ? " - miss" : " - hit"));
         MessageToClient messageToClient = new MessageToClient();
         if (cell.getShip() != null) {
             if (cell.getShip().isSunken()) {
@@ -135,6 +136,7 @@ public class Game {
                 }
                 messageToClient.setShipSunken(true);
                 messageToClient.setCoordinate(coordinates);
+                printToLog("Player" + player + " sank a ship");
             }
         }
         messageToClient.setChangeClientText(true);
@@ -144,11 +146,13 @@ public class Game {
         messageToClient.setStatus(cell.getStatus());
         messageToClient.setYourShot(player == 1);
         try {
-            if (board.isGameOver(player)) {
+            if (board.isGameOver(player == 1)) {
                 messageToClient.setGameOver(true);
                 messageToClient.setClientText(player == 1 ? "You Won!!!!" : "You Lost!!!!");
                 outP1.writeObject(messageToClient);
                 messageToClient.setClientText(player != 1 ? "You Won!!!!" : "You Lost!!!!");
+                outP2.writeObject(messageToClient);
+                printToLog("Player" + player + " won");
             } else {
                 messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
                 messageToClient.setYourTurn(!(player == 1));
@@ -165,6 +169,7 @@ public class Game {
 
     public void writeMessage(String sender, String message) {
         String string = sender + ": " + message;
+        printToLog("Chat message - " + string);
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setMessage(string);
         messageToClient.setMessage(true);
@@ -174,10 +179,11 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void printToLog(String message){
+        notifier.printToServerLog("Game session #" + sessionID + ": " + message);
+    }
 
     public Socket getPlayer1() {
         return player1;
