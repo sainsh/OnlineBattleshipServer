@@ -72,6 +72,7 @@ public class Game{
                         int x = cell.getCoordinate().getX();
                         int y = cell.getCoordinate().getY();
                         shoot(x, y, 1);
+
                     }
                     if (messageToServer.isChatMessage()){
                         writeMessage("Player1", messageToServer.getChatMessage());
@@ -120,6 +121,7 @@ public class Game{
         }
         Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
         Cell cell = enemyBoard[x][y];
+        enemyBoard[x][y].getStatus();
 
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
