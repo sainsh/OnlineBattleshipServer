@@ -1,6 +1,7 @@
 package Communication;
 
 import Model.Cell;
+import Model.Coordinate;
 
 import java.io.Serializable;
 
@@ -19,6 +20,9 @@ public class MessageToClient implements Serializable {
     boolean changeClientText = false;
 
     boolean isGameOver = false;
+
+    private Cell[][] board;
+    private boolean hasBoard = false;
 
 
 
@@ -58,7 +62,6 @@ public class MessageToClient implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
-        isMessage = true;
     }
 
     public String getSender() {
@@ -75,7 +78,6 @@ public class MessageToClient implements Serializable {
 
     public void setClientText(String clientText) {
         this.clientText = clientText;
-        changeClientText = true;
     }
 
     public boolean isChangeClientText() {
@@ -108,5 +110,22 @@ public class MessageToClient implements Serializable {
 
     public void setYourShot(boolean yourShot) {
         this.yourShot = yourShot;
+    }
+
+    public Cell[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Cell[][] board) {
+        this.board = board;
+        hasBoard = true;
+    }
+
+    public boolean isHasBoard() {
+        return hasBoard;
+    }
+
+    public void setHasBoard(boolean hasBoard) {
+        this.hasBoard = hasBoard;
     }
 }

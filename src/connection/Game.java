@@ -46,7 +46,9 @@ public class Game{
         messageToPlayer1.setClientText("Your Turn");
         messageToPlayer1.setChangeClientText(true);
         messageToPlayer2.setClientText("Opponents turn");
+        messageToPlayer1.setBoard(board.getBoard1());
         messageToPlayer2.setChangeClientText(true);
+        messageToPlayer2.setBoard(board.getBoard2());
         try {
             System.out.println("Sending message to client");
             outP1.writeObject(messageToPlayer1);
