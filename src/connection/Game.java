@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-public class Game{
+public class Game {
     private Socket player1;
     private ObjectOutputStream outP1;
     private ObjectInputStream inP1;
@@ -40,7 +40,7 @@ public class Game{
         }
     }
 
-    public void startGame(){
+    public void startGame() {
         board = new Board();
         MessageToClient messageToPlayer1 = new MessageToClient();
         MessageToClient messageToPlayer2 = new MessageToClient();
@@ -65,19 +65,19 @@ public class Game{
         }
     }
 
-    public void listenToPlayer1(){
+    public void listenToPlayer1() {
         Runnable runnable = () -> {
-            while(true){
+            while (true) {
                 MessageToServer messageToServer = new MessageToServer();
                 try {
                     messageToServer = (MessageToServer) inP1.readObject();
-                    if(messageToServer.isShot()){
+                    if (messageToServer.isShot()) {
                         int x = messageToServer.getX();
                         int y = messageToServer.getY();
                         shoot(x, y, 1);
 
                     }
-                    if (messageToServer.isChatMessage()){
+                    if (messageToServer.isChatMessage()) {
                         writeMessage("Player1", messageToServer.getChatMessage());
                     }
                 } catch (IOException e) {
@@ -90,18 +90,18 @@ public class Game{
         new Thread(runnable).start();
     }
 
-    public void listenToPlayer2(){
+    public void listenToPlayer2() {
         Runnable runnable = () -> {
-            while(true){
+            while (true) {
                 MessageToServer messageToServer = new MessageToServer();
                 try {
                     messageToServer = (MessageToServer) inP2.readObject();
-                    if(messageToServer.isShot()){
+                    if (messageToServer.isShot()) {
                         int x = messageToServer.getX();
                         int y = messageToServer.getY();
                         shoot(x, y, 2);
                     }
-                    if (messageToServer.isChatMessage()){
+                    if (messageToServer.isChatMessage()) {
                         writeMessage("Player2", messageToServer.getChatMessage());
                     }
                 } catch (IOException e) {
@@ -114,26 +114,28 @@ public class Game{
         new Thread(runnable).start();
     }
 
-    public void shoot(int x, int y, int player){
+    public void shoot(int x, int y, int player) {
         System.out.println("Shot registered from player" + player + " at " + x + "," + y);
-        if(player == 1){
+        if (player == 1) {
             board.shootBoard2(x, y);
-        }else{
+        } else {
             board.shootBoard1(x, y);
         }
         Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
         Cell cell = enemyBoard[x][y];
         cell.setStatus();
         MessageToClient messageToClient = new MessageToClient();
-        if(cell.getShip().isSunken()){
-            List<Coordinate> coordinatesList = cell.getShip().getCoordinates();
-            int[] coordinates = new int[coordinatesList.size() * 2];
-            for (int i = 0; i < coordinates.length; i += 2) {
-                coordinates[i] = coordinatesList.get(i / 2).getX();
-                coordinates[i + 1] = coordinatesList.get(i / 2).getY();
+        if (cell.getShip() != null) {
+            if (cell.getShip().isSunken()) {
+                List<Coordinate> coordinatesList = cell.getShip().getCoordinates();
+                int[] coordinates = new int[coordinatesList.size() * 2];
+                for (int i = 0; i < coordinates.length; i += 2) {
+                    coordinates[i] = coordinatesList.get(i / 2).getX();
+                    coordinates[i + 1] = coordinatesList.get(i / 2).getY();
+                }
+                messageToClient.setShipSunken(true);
+                messageToClient.setCoordinate(coordinates);
             }
-            messageToClient.setShipSunken(true);
-            messageToClient.setCoordinate(coordinates);
         }
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
@@ -141,13 +143,13 @@ public class Game{
         messageToClient.setY(cell.getCoordinate().getY());
         messageToClient.setStatus(cell.getStatus());
         messageToClient.setYourShot(player == 1);
-        try{
-            if(board.isGameOver(player)) {
+        try {
+            if (board.isGameOver(player)) {
                 messageToClient.setGameOver(true);
                 messageToClient.setClientText(player == 1 ? "You Won!!!!" : "You Lost!!!!");
                 outP1.writeObject(messageToClient);
                 messageToClient.setClientText(player != 1 ? "You Won!!!!" : "You Lost!!!!");
-            }else{
+            } else {
                 messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
                 messageToClient.setYourTurn(!(player == 1));
                 outP1.writeObject(messageToClient);
@@ -161,7 +163,7 @@ public class Game{
         }
     }
 
-    public void writeMessage(String sender, String message){
+    public void writeMessage(String sender, String message) {
         String string = sender + ": " + message;
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setMessage(string);
