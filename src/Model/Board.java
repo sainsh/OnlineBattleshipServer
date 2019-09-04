@@ -81,18 +81,16 @@ public class Board {
             int startY = 0;
             boolean horizontal = false;
             while(shipNotPlaceable) {
-                System.out.println("WhileLoop started");
                 shipNotPlaceable = false;
                 horizontal = (int) (Math.random() * 2) == 0;
                 startX = horizontal ? (int) (Math.random() * (5 - ship.getLength())) : (int) (Math.random() * 5);
                 startY = !horizontal ? (int) (Math.random() * (5 - ship.getLength())): (int) (Math.random() * 5);
                 for (int j = 0; j < ship.getLength(); j++) {
                     if(horizontal){
-                        if (board[startX + i][startY].getShip() != null)
-                            System.out.println(board[startX + i][startY].getShip() != null);
+                        if (board[startX + j][startY].getShip() != null)
                             shipNotPlaceable = true;
                     }else{
-                        if (board[startX][startY + i].getShip() != null)
+                        if (board[startX][startY + j].getShip() != null)
                             shipNotPlaceable = true;
                     }
                 }
