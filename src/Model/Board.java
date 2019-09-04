@@ -61,8 +61,8 @@ public class Board {
     }
 
     public void setShips(){
-        Cell[][] board = new Cell[5][5];
         for (int k = 0; k < 2; k++) {
+            Cell[][] board;
             if (k == 0) {
                 board = board1;
             } else {
