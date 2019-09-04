@@ -17,11 +17,12 @@ public class Board {
         if(shotCell.getShip() != null) {
             for (Coordinate cor : shotCell.getShip().getCoordinates()
             ) {
-                if (shotCell.getCoordinate() == cor) {
+                if (shotCell.getCoordinate().getX() == cor.getX() && shotCell.getCoordinate().getY() == cor.getY()) {
                     cor.setHit(true);
                 }
             }
         }
+        shotCell.setStatus();
         return shotCell;
     }
 
@@ -37,6 +38,7 @@ public class Board {
                 }
             }
         }
+        shotCell.setStatus();
     }
 
     public Board() {
