@@ -4,11 +4,13 @@ import Communication.MessageToClient;
 import Model.Cell;
 import Communication.MessageToServer;
 import Model.Board;
+import Model.Coordinate;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 public class Game{
     private Socket player1;
@@ -122,8 +124,17 @@ public class Game{
         Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
         Cell cell = enemyBoard[x][y];
         cell.setStatus();
-
         MessageToClient messageToClient = new MessageToClient();
+        if(cell.getShip().isSunken()){
+            List<Coordinate> coordinatesList = cell.getShip().getCoordinates();
+            int[] coordinates = new int[coordinatesList.size() * 2];
+            for (int i = 0; i < coordinates.length; i += 2) {
+                coordinates[i] = coordinatesList.get(i / 2).getX();
+                coordinates[i + 1] = coordinatesList.get(i / 2).getY();
+            }
+            messageToClient.setShipSunken(true);
+            messageToClient.setCoordinate(coordinates);
+        }
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
         messageToClient.setX(cell.getCoordinate().getX());
