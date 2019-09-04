@@ -165,7 +165,7 @@ public class Board {
                 for (int j = 0; j < 5; j++) {
                     Ship ship = board2[i][j].getShip();
                     if(ship != null){
-                        if (ship.isSunken())
+                        if (!ship.isSunken())
                             return false;
                     }
                 }
