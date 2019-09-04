@@ -1,16 +1,14 @@
 package Communication;
 
-import Model.Cell;
-
 import java.io.Serializable;
 
 public class MessageToServer implements Serializable {
 
-    boolean isChatMessage = false;
+    private boolean isChatMessage = false;
     boolean isShot = false;
-    String chatMessage;
-    Cell shot;
-    String sender;
+    private String chatMessage;
+    private int x, y;
+    private String sender;
 
     public MessageToServer() {
 
@@ -38,15 +36,22 @@ public class MessageToServer implements Serializable {
 
     public void setChatMessage(String chatMessage) {
         this.chatMessage = chatMessage;
-        isChatMessage = true;
     }
 
-    public Cell getShot() {
-        return shot;
+    public int getX() {
+        return x;
     }
 
-    public void setShot(Cell shot) {
-        this.shot = shot;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public String getSender() {
@@ -56,5 +61,4 @@ public class MessageToServer implements Serializable {
     public void setSender(String sender) {
         this.sender = sender;
     }
-    
 }

@@ -39,10 +39,6 @@ public class Board {
         }
     }
 
-    public Cell[][] getBoard1() {
-        return board1;
-    }
-
     public Board() {
         Cell[][] cells1 = new Cell[5][5];
         Cell[][] cells2 = new Cell[5][5];
@@ -155,8 +151,24 @@ public class Board {
         this.board1 = board1;
     }
 
-    public Cell[][] getBoard2() {
-        return board2;
+    public int[][] getBoard1AsInts() {
+        int[][] board = new int[5][5];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                board[i][j] = board1[i][j].getShip() != null ? 1 : 0;
+            }
+        }
+        return board;
+    }
+
+    public int[][] getBoard2AsInts() {
+        int[][] board = new int[5][5];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                board[i][j] = board2[i][j].getShip() != null ? 1 : 0;
+            }
+        }
+        return board;
     }
 
     public void setBoard2(Cell[][] board2) {
@@ -194,5 +206,13 @@ public class Board {
                 board2[x][y].setShip(s);
             }
         }
+    }
+
+    public Cell[][] getBoard1() {
+        return board1;
+    }
+
+    public Cell[][] getBoard2() {
+        return board2;
     }
 }

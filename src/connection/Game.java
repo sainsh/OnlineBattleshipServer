@@ -46,9 +46,9 @@ public class Game{
         messageToPlayer1.setClientText("Your Turn");
         messageToPlayer1.setChangeClientText(true);
         messageToPlayer2.setClientText("Opponents turn");
-        messageToPlayer1.setBoard(board.getBoard1());
+        messageToPlayer1.setBoard(board.getBoard1AsInts());
         messageToPlayer2.setChangeClientText(true);
-        messageToPlayer2.setBoard(board.getBoard2());
+        messageToPlayer2.setBoard(board.getBoard2AsInts());
         try {
             System.out.println("Sending message to client");
             outP1.writeObject(messageToPlayer1);
@@ -68,9 +68,8 @@ public class Game{
                 try {
                     messageToServer = (MessageToServer) inP1.readObject();
                     if(messageToServer.isShot()){
-                        Cell cell = messageToServer.getShot();
-                        int x = cell.getCoordinate().getX();
-                        int y = cell.getCoordinate().getY();
+                        int x = messageToServer.getX();
+                        int y = messageToServer.getY();
                         shoot(x, y, 1);
 
                     }
@@ -94,9 +93,8 @@ public class Game{
                 try {
                     messageToServer = (MessageToServer) inP2.readObject();
                     if(messageToServer.isShot()){
-                        Cell cell = messageToServer.getShot();
-                        int x = cell.getCoordinate().getX();
-                        int y = cell.getCoordinate().getY();
+                        int x = messageToServer.getX();
+                        int y = messageToServer.getY();
                         shoot(x, y, 2);
                     }
                     if (messageToServer.isChatMessage()){
@@ -121,14 +119,15 @@ public class Game{
         }
         Cell[][] enemyBoard = player == 1 ? board.getBoard2() : board.getBoard1();
         Cell cell = enemyBoard[x][y];
-        enemyBoard[x][y].getStatus();
+        cell.setStatus();
 
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
-        messageToClient.setShot(cell);
-        cell.setStatus();
+        messageToClient.setX(cell.getCoordinate().getX());
+        messageToClient.setY(cell.getCoordinate().getY());
+        messageToClient.setStatus(cell.getStatus());
         messageToClient.setYourShot(player == 1);
         messageToClient.setYourTurn(!(player == 1));
         try {
