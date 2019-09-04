@@ -149,6 +149,31 @@ public class Board {
         }
     }
 
+    public boolean isGameOver(int player){
+        if(player == 1){
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    Ship ship = board1[i][j].getShip();
+                    if(ship != null){
+                        if (ship.isSunken())
+                            return false;
+                    }
+                }
+            }
+        }else{
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    Ship ship = board2[i][j].getShip();
+                    if(ship != null){
+                        if (ship.isSunken())
+                            return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public void setBoard1(Cell[][] board1) {
         this.board1 = board1;
     }

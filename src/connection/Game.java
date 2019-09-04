@@ -124,20 +124,27 @@ public class Game{
         cell.setStatus();
 
         MessageToClient messageToClient = new MessageToClient();
-        messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
         messageToClient.setX(cell.getCoordinate().getX());
         messageToClient.setY(cell.getCoordinate().getY());
         messageToClient.setStatus(cell.getStatus());
         messageToClient.setYourShot(player == 1);
-        messageToClient.setYourTurn(!(player == 1));
-        try {
-            outP1.writeObject(messageToClient);
-            messageToClient.setClientText(player != 1 ? "Opponents turn" : "Your turn");
-            messageToClient.setYourShot(!(player == 1));
-            messageToClient.setYourTurn(player == 1);
-            outP2.writeObject(messageToClient);
+        try{
+            if(board.isGameOver(player)) {
+                messageToClient.setGameOver(true);
+                messageToClient.setClientText(player == 1 ? "You Won!!!!" : "You Lost!!!!");
+                outP1.writeObject(messageToClient);
+                messageToClient.setClientText(player != 1 ? "You Won!!!!" : "You Lost!!!!");
+            }else{
+                messageToClient.setClientText(player == 1 ? "Opponents turn" : "Your turn");
+                messageToClient.setYourTurn(!(player == 1));
+                outP1.writeObject(messageToClient);
+                messageToClient.setClientText(player != 1 ? "Opponents turn" : "Your turn");
+                messageToClient.setYourShot(!(player == 1));
+                messageToClient.setYourTurn(player == 1);
+                outP2.writeObject(messageToClient);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,6 +154,7 @@ public class Game{
         String string = sender + ": " + message;
         MessageToClient messageToClient = new MessageToClient();
         messageToClient.setMessage(string);
+        messageToClient.setMessage(true);
         try {
             outP1.writeObject(messageToClient);
             outP2.writeObject(messageToClient);
