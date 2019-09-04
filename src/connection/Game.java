@@ -128,6 +128,7 @@ public class Game{
         messageToClient.setChangeClientText(true);
         messageToClient.setShot(true);
         messageToClient.setShot(cell);
+        cell.setStatus();
         messageToClient.setYourShot(player == 1);
         messageToClient.setYourTurn(!(player == 1));
         try {
