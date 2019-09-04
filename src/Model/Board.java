@@ -62,55 +62,55 @@ public class Board {
 
     public void setShips(){
         Cell[][] board = new Cell[5][5];
-        for (int i = 0; i < 2; i++) {
-            if(i == 0){
+        for (int k = 0; k < 2; k++) {
+            if (k == 0) {
                 board = board1;
-            }else{
+            } else {
                 board = board2;
             }
-        }
-        for (int i = 0; i < 3; i++) {
-            Ship ship = new Ship();
-            if(i % 2 == 0){
-                ship.setLength(2);
-            }else{
-                ship.setLength(3);
-            }
-            boolean shipNotPlaceable = true;
-            int startX = 0;
-            int startY = 0;
-            boolean horizontal = false;
-            while(shipNotPlaceable) {
-                shipNotPlaceable = false;
-                horizontal = (int) (Math.random() * 2) == 0;
-                startX = horizontal ? (int) (Math.random() * (5 - ship.getLength())) : (int) (Math.random() * 5);
-                startY = !horizontal ? (int) (Math.random() * (5 - ship.getLength())): (int) (Math.random() * 5);
-                for (int j = 0; j < ship.getLength(); j++) {
-                    if(horizontal){
-                        if (board[startX + j][startY].getShip() != null)
-                            shipNotPlaceable = true;
-                    }else{
-                        if (board[startX][startY + j].getShip() != null)
-                            shipNotPlaceable = true;
+            for (int i = 0; i < 3; i++) {
+                Ship ship = new Ship();
+                if (i % 2 == 0) {
+                    ship.setLength(2);
+                } else {
+                    ship.setLength(3);
+                }
+                boolean shipNotPlaceable = true;
+                int startX = 0;
+                int startY = 0;
+                boolean horizontal = false;
+                while (shipNotPlaceable) {
+                    shipNotPlaceable = false;
+                    horizontal = (int) (Math.random() * 2) == 0;
+                    startX = horizontal ? (int) (Math.random() * (5 - ship.getLength())) : (int) (Math.random() * 5);
+                    startY = !horizontal ? (int) (Math.random() * (5 - ship.getLength())) : (int) (Math.random() * 5);
+                    for (int j = 0; j < ship.getLength(); j++) {
+                        if (horizontal) {
+                            if (board[startX + j][startY].getShip() != null)
+                                shipNotPlaceable = true;
+                        } else {
+                            if (board[startX][startY + j].getShip() != null)
+                                shipNotPlaceable = true;
+                        }
                     }
                 }
-            }
-            List<Coordinate> coordinates = new ArrayList<>();
-            for (int j = 0; j < ship.getLength(); j++) {
-                if (horizontal){
-                    coordinates.add(new Coordinate(startX + j, startY));
-                    board[startX + j][startY].setShip(ship);
-                } else{
-                    coordinates.add(new Coordinate(startX, startY + j));
-                    board[startX][startY + j].setShip(ship);
+                List<Coordinate> coordinates = new ArrayList<>();
+                for (int j = 0; j < ship.getLength(); j++) {
+                    if (horizontal) {
+                        coordinates.add(new Coordinate(startX + j, startY));
+                        board[startX + j][startY].setShip(ship);
+                    } else {
+                        coordinates.add(new Coordinate(startX, startY + j));
+                        board[startX][startY + j].setShip(ship);
+                    }
                 }
-            }
-            ship.setCoordinates(coordinates);
-            System.out.print("\n" + ship.getCoordinates().get(0).getX() + "," + ship.getCoordinates().get(0).getY() + " " +
-                    ship.getCoordinates().get(1).getX() + "," + ship.getCoordinates().get(1).getY() + " ");
-            if (i == 1)
-                System.out.print(ship.getCoordinates().get(2).getX() + "," + ship.getCoordinates().get(2).getY() + " ");
+                ship.setCoordinates(coordinates);
+                System.out.print("\n" + ship.getCoordinates().get(0).getX() + "," + ship.getCoordinates().get(0).getY() + " " +
+                        ship.getCoordinates().get(1).getX() + "," + ship.getCoordinates().get(1).getY() + " ");
+                if (i == 1)
+                    System.out.print(ship.getCoordinates().get(2).getX() + "," + ship.getCoordinates().get(2).getY() + " ");
 
+            }
         }
     }
 
