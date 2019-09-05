@@ -8,7 +8,7 @@ import java.util.Date;
 public class ServerController implements NotifyServer {
     public TextArea serverLog;
 
-        public void initialize(){
+    public void initialize(){
         serverLog.setEditable(false);
         serverLog.appendText(new Date() + ": Server started\n");
         ConToClients con = new ConToClients(this);
